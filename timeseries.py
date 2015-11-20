@@ -67,20 +67,25 @@ nco.Conventions = 'CF-1.6'
 lono[:] = lon
 lato[:] = lat
 
+pat = re.compile(r'^(\w{1})(\d{4})(\d{2})(\d{2})_\d{6}')
 # pat = re.compile('us_tmin_[0-9]{4}\.[0-9]{2}')
-pat = re.compile('(\w{1})(\d{4})(\d{2})(\d{2})_\d{6}')
+# pat = re.compile('R[0-9]{4}[0-9]{4}_[0-9]{6}___SIG0.*.tif$')
 # pat = re.compile('us_(\w{1})(\d{4})(\d{2})(\d{2})')
 itime = 0
-
 # Step through data, writing time and data to NetCDF
-for root, dirs, files in os.walk('/data_sample/'):
+for root, dirs, files in os.walk('/home/pydev/Desktop/2015/sar_tasks/task2_GeoTIFF_to_NetCDF/data_sample/'):
     dirs.sort()
     files.sort()
     for f in files:
-        if re.match(pat, f):
+        match = re.match(pat, f)
+        if match:
             # read the time values by parsing the filename
-            year = int(f[4:8])
-            mon = int(f[8:10])
+            # year = int(f[4:8])
+            year = int(match.group(2))
+            # year = match.group(1)
+            # mon = int(f[8:10])
+            mon = int(match.group(3))
+            # mon = match.group(2)
             date = dt.datetime(year, mon, 1, 0, 0, 0)
             print(date)
             dtime = (date-basedate).total_seconds()/86400.
