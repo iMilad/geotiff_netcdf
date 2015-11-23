@@ -2,9 +2,14 @@ import os
 from os import listdir
 from os.path import isfile, join
 
-myPath = "data_sample/"
-onlyFiles = [f for f in listdir(myPath) if isfile(join(myPath, f))]
+readPath = "data_sample/"
+savePath = "data_sample/wgs84"
+if not os.path.exists(savePath):
+    os.makedirs(savePath)
+
+onlyFiles = [f for f in listdir(readPath) if isfile(join(readPath, f))]
 
 for fName in onlyFiles:
+    dstnPath = os.path.join(savePath, 'WGS84_'+fName)
     os.system('gdalwarp %s %s -t_srs "+proj=longlat +ellps=WGS84"'
-              % (myPath+fName, myPath+'WGS84_'+fName))
+              % (readPath+fName, dstnPath))
