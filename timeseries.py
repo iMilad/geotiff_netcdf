@@ -5,7 +5,12 @@ import gdal
 import netCDF4
 import re
 
-ds = gdal.Open('/home/pydev/Desktop/2015/sar_tasks/task2_GeoTIFF_to_NetCDF/data_sample/R20060111_075725___SIG0__ASAWS___M1VVD_TUW_SGRT15A00_AF075M_E060N054T6.tif')
+import time
+
+start = time.strftime("%c")
+print start
+
+ds = gdal.Open('data_sample/R20060111_075725___SIG0__ASAWS___M1VVD_TUW_SGRT15A00_AF075M_E060N054T6.tif')
 
 a = ds.ReadAsArray()
 nlat, nlon = np.shape(a)
@@ -20,9 +25,9 @@ basedate = dt.datetime(2006, 01, 11, 0, 0, 0)
 # Clobber- Overwrite any existing file with the same name
 nco = netCDF4.Dataset('time_series.nc', 'w', clobber=True)
 
-chunk_lon = 16
-chunk_lat = 16
-chunk_time = 12
+# chunk_lon = 16
+# chunk_lat = 16
+# chunk_time = 50
 
 # Create dimensions, variables and attributes:
 nco.createDimension('lon', nlon)
@@ -47,17 +52,11 @@ crso.longitude_of_prime_meridian = 0.0
 crso.semi_major_axis = 6378137.0
 crso.inverse_flattening = 298.257223563
 
-# Create short integer variable for temperature data, with chunking
+# Create short integer variable with chunking
 tmno = nco.createVariable('tmn', 'i2',  ('time', 'lat', 'lon'),
-                          zlib=True, chunksizes=[chunk_time,
-                                                 chunk_lat,
-                                                 chunk_lon],
-                          fill_value=-9999)
-tmno.units = 'degC'
+                          zlib=True, fill_value=-9999)
 tmno.scale_factor = 0.01
 tmno.add_offset = 0.00
-tmno.long_name = 'minimum monthly temperature'
-tmno.standard_name = 'air_temperature'
 tmno.grid_mapping = 'crs'
 tmno.set_auto_maskandscale(False)
 
@@ -71,7 +70,11 @@ pat = re.compile(r'^(\w{1})(\d{4})(\d{2})(\d{2})_\d{6}')
 itime = 0
 
 # Step through data, writing time and data to NetCDF
-for root, dirs, files in os.walk('/home/pydev/Desktop/2015/sar_tasks/task2_GeoTIFF_to_NetCDF/data_sample/'):
+for root, dirs, files in os.walk('/media/sf_R/Datapool_processed'
+                                 + '/Envisat_ASAR/WS/preprocessed/SGRT15A00'
+                                 + '/datasets/resampled/EQUI7_AF075M'
+                                 + '/E060N054T6'):
+# for root, dirs, files in os.walk('data_sample'):
     dirs.sort()
     files.sort()
     for f in files:
@@ -85,7 +88,6 @@ for root, dirs, files in os.walk('/home/pydev/Desktop/2015/sar_tasks/task2_GeoTI
             print(date)
             dtime = (date-basedate).total_seconds()/86400.
             timeo[itime] = dtime
-            # min temp
             tmn_path = os.path.join(root, f)
             print(tmn_path)
             tmn = gdal.Open(tmn_path)
@@ -94,3 +96,8 @@ for root, dirs, files in os.walk('/home/pydev/Desktop/2015/sar_tasks/task2_GeoTI
             itime = itime+1
 
 nco.close()
+
+stop = time.strftime("%c")
+
+print start
+print stop
