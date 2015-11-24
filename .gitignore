@@ -1,0 +1,4 @@
+*.pyc
+*.nc
+data2/
+data_sample/
