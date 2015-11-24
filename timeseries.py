@@ -5,13 +5,29 @@ import gdal
 import netCDF4
 import re
 import time
+from os import listdir
+from os.path import isfile, join
 
 start = time.strftime("%c")
 print start
 
 
-def tiff_to_netcdf(*args):
-    ds = gdal.Open('data_sample/R20060111_075725___SIG0__ASAWS___M1VVD_TUW_SGRT15A00_AF075M_E060N054T6.tif')
+def tiff_to_netcdf(*args, **kwargs):
+
+    # Chunk's value is defined by user
+    if len(args) != 0:
+        chunks = []
+        for arg in args:
+            chunks.append(arg)
+    else:
+        chunks = None
+
+    # Image stack's path
+    if len(kwargs) != 0:
+        path = kwargs.values()
+
+    images = [f for f in listdir(path[0]) if isfile(join(path[0], f))]
+    ds = gdal.Open(path[0] + '/' + images[0])
 
     a = ds.ReadAsArray()
     nlat, nlon = np.shape(a)
@@ -25,14 +41,6 @@ def tiff_to_netcdf(*args):
     # Create NetCDF file
     # Clobber- Overwrite any existing file with the same name
     nco = netCDF4.Dataset('time_series.nc', 'w', clobber=True)
-
-    # Defined chunk's value by user
-    if len(args) != 0:
-        chunks = []
-        for arg in args:
-            chunks.append(arg)
-    else:
-        chunks = None
 
     # Create dimensions, variables and attributes:
     nco.createDimension('lon', nlon)
@@ -75,11 +83,7 @@ def tiff_to_netcdf(*args):
     itime = 0
 
     # Step through data, writing time and data to NetCDF
-    # for root, dirs, files in os.walk('data_sample'):
-    for root, dirs, files in os.walk('/media/sf_R/Datapool_processed'
-                                     + '/Envisat_ASAR/WS/preprocessed'
-                                     + '/SGRT15A00/datasets/resampled'
-                                     + '/EQUI7_AF075M/E060N054T6'):
+    for root, dirs, files in os.walk(path[0]):
         dirs.sort()
         files.sort()
         for f in files:
