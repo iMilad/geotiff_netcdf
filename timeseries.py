@@ -5,8 +5,6 @@ import gdal
 import netCDF4
 import re
 import time
-from os import listdir
-from os.path import isfile, join
 
 start = time.strftime("%c")
 print start
@@ -26,8 +24,12 @@ def tiff_to_netcdf(*args, **kwargs):
     if len(kwargs) != 0:
         path = kwargs.values()
 
-    images = [f for f in listdir(path[0]) if isfile(join(path[0], f))]
-    ds = gdal.Open(path[0] + '/' + images[0])
+    images = []
+    for paths, subdirs, files in os.walk(path[0]):
+        for name in files:
+            images.append(os.path.join(paths, name))
+
+    ds = gdal.Open(images[0])
 
     a = ds.ReadAsArray()
     nlat, nlon = np.shape(a)
