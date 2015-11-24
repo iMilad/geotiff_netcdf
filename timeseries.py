@@ -4,13 +4,13 @@ import os
 import gdal
 import netCDF4
 import re
-import time
-
-start = time.strftime("%c")
-print start
+import datetime
 
 
 def tiff_to_netcdf(*args, **kwargs):
+
+    start = datetime.datetime.now()
+    print '\nExecution started at: ', start, '\n'
 
     # Chunk's value is defined by user
     if len(args) != 0:
@@ -108,7 +108,5 @@ def tiff_to_netcdf(*args, **kwargs):
 
     nco.close()
 
-stop = time.strftime("%c")
-
-print start
-print stop
+    stop = datetime.datetime.now()
+    print '\nExecution Ended at: ', stop, '\nElapsed time: ', stop - start
