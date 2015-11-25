@@ -7,25 +7,17 @@ import re
 import datetime
 
 
-def tiff_to_netcdf(*args, **kwargs):
+def tiff_to_netcdf(chunksize=None, **imagesPath):
 
     start = datetime.datetime.now()
     print '\nExecution started at: ', start, '\n'
 
-    # Chunk's value is defined by user
-    if len(args) != 0:
-        chunks = []
-        for arg in args:
-            chunks.append(arg)
-    else:
-        chunks = None
-
     # Image stack's path
-    if len(kwargs) != 0:
-        path = kwargs.values()
+    if len(imagesPath) != 0:
+        filesPath = imagesPath.values()
 
     images = []
-    for paths, subdirs, files in os.walk(path[0]):
+    for paths, subdirs, files in os.walk(filesPath[0]):
         for name in files:
             images.append(os.path.join(paths, name))
 
@@ -69,7 +61,7 @@ def tiff_to_netcdf(*args, **kwargs):
 
     # Create short integer variable with chunking
     tmno = nco.createVariable('tmn', 'i2',  ('time', 'lat', 'lon'),
-                              zlib=True, chunksizes=chunks, fill_value=-9999)
+                              zlib=True, chunksizes=chunksize, fill_value=-9999)
     tmno.scale_factor = 0.01
     tmno.add_offset = 0.00
     tmno.grid_mapping = 'crs'
@@ -85,7 +77,7 @@ def tiff_to_netcdf(*args, **kwargs):
     itime = 0
 
     # Step through data, writing time and data to NetCDF
-    for root, dirs, files in os.walk(path[0]):
+    for root, dirs, files in os.walk(filesPath[0]):
         dirs.sort()
         files.sort()
         for f in files:
