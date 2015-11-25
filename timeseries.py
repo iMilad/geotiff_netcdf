@@ -81,7 +81,7 @@ def tiff_to_netcdf(*args, **kwargs):
     lono[:] = lon
     lato[:] = lat
 
-    pat = re.compile(r'^(\w{1})(\d{4})(\d{2})(\d{2})_\d{6}')
+    pat = re.compile(r'^(\w{1})(\d{4})(\d{2})(\d{2})_\d{6}___SIG0.*.tif$')
     itime = 0
 
     # Step through data, writing time and data to NetCDF
