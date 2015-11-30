@@ -7,17 +7,13 @@ import re
 import datetime
 
 
-def tiff_to_netcdf(chunksize=None, **imagesPath):
+def tiff_to_netcdf(imagesPath, chunksize=None):
 
     start = datetime.datetime.now()
     print '\nExecution started at: ', start, '\n'
 
-    # Image stack's path
-    if len(imagesPath) != 0:
-        filesPath = imagesPath.values()
-
     images = []
-    for paths, subdirs, files in os.walk(filesPath[0]):
+    for paths, subdirs, files in os.walk(imagesPath):
         for name in files:
             images.append(os.path.join(paths, name))
 
@@ -77,7 +73,7 @@ def tiff_to_netcdf(chunksize=None, **imagesPath):
     itime = 0
 
     # Step through data, writing time and data to NetCDF
-    for root, dirs, files in os.walk(filesPath[0]):
+    for root, dirs, files in os.walk(imagesPath):
         dirs.sort()
         files.sort()
         for f in files:
