@@ -7,7 +7,7 @@ import re
 import datetime
 
 
-def tiff_to_netcdf(imagesPath, chunksize=None):
+def tiff_to_netcdf(imagesPath, output, chunksize=None):
 
     start = datetime.datetime.now()
     print '\nExecution started at: ', start, '\n'
@@ -30,7 +30,7 @@ def tiff_to_netcdf(imagesPath, chunksize=None):
 
     # Create NetCDF file
     # Clobber- Overwrite any existing file with the same name
-    nco = netCDF4.Dataset('time_series.nc', 'w', clobber=True)
+    nco = netCDF4.Dataset(output + '.nc', 'w', clobber=True)
 
     # Create dimensions, variables and attributes:
     nco.createDimension('lon', nlon)
