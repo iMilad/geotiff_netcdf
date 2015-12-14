@@ -9,6 +9,19 @@ import datetime
 
 def tiff_to_netcdf(imagesPath, output, chunksize=None):
 
+    """
+    Parameters
+    ----------
+    imagesPath : Path to image folder
+    output : output name
+    chunksize : chunk's size as tuple or list
+                [time, lat, lon]
+
+    Returns
+    -------
+    One nc file (NetCDF4 format) contains imagestacks
+    """
+
     start = datetime.datetime.now()
     print '\nExecution started at: ', start, '\n'
 
