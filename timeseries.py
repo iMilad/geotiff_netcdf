@@ -1,3 +1,12 @@
+"""
+Created on Jan 13, 2015
+
+Creating Color Table for matplotlib package
+
+@author: Milad Khakpour,  milad.khakpour@gmail.com
+"""
+
+
 import numpy as np
 import datetime as dt
 import os
