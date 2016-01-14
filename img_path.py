@@ -50,3 +50,5 @@ def extr_img_path(imgPath):
             if name.endswith('.tif'):
                 img_txt.write(join(paths, name) + '\n')
     img_txt.close()
+
+    os.system('gdalbuildvrt -input_file_list img_path.txt images.vrt')
