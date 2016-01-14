@@ -10,8 +10,8 @@ import os
 from os.path import realpath, join
 
 
-# Extract image stack path
-def extr_img_path(imgPath):
+# Extract absolute image stack path
+def extr_absimg_path(imgPath):
 
     """
     Parameters
@@ -24,10 +24,29 @@ def extr_img_path(imgPath):
     """
 
     for root, dirs, files in os.walk(imgPath):
-        img_txt = open('absolute_img_path.txt', 'w')
+        abs_img_txt = open('absolute_img_path.txt', 'w')
         for name in files:
             if name.endswith('.tif'):
                 name = realpath(join(root, name))
-                print name
-                img_txt.write(name + '\n')
-        img_txt.close()
+                abs_img_txt.write(name + '\n')
+        abs_img_txt.close()
+
+
+def extr_img_path(imgPath):
+
+    """
+    Parameters
+    ----------
+    imgPath: Path to imagestacks folder
+
+    Returns
+    -------
+    Text file contains absolute image's path
+    """
+
+    img_txt = open('img_path.txt', 'w')
+    for paths, subdirs, files in os.walk(imgPath):
+        for name in files:
+            if name.endswith('.tif'):
+                img_txt.write(join(paths, name) + '\n')
+    img_txt.close()
