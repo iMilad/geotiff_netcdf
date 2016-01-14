@@ -20,10 +20,14 @@ def extr_img_path(imgPath):
 
     Returns
     -------
-
+    Text file contains absolute image's path
     """
+
     for root, dirs, files in os.walk(imgPath):
+        img_txt = open('absolute_img_path.txt', 'w')
         for name in files:
             if name.endswith('.tif'):
                 name = realpath(join(root, name))
                 print name
+                img_txt.write(name + '\n')
+        img_txt.close()
