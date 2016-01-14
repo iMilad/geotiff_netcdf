@@ -34,24 +34,28 @@ def tiff_to_netcdf(imagesPath, output, chunksize=None):
     start = datetime.datetime.now()
     print '\nExecution started at: ', start, '\n'
 
-    # img_txt = open('img_path.txt', 'w')
-    # for paths, subdirs, files in os.walk(imagesPath):
-    #     for name in files:
-    #         if name.endswith('.tif'):
-    #             img_txt.write(os.path.join(paths, name) + '\n')
-    # img_txt.close()
-
-    # Build vrt files
-    # os.system('gdalbuildvrt -separate -input_file_list img_path.txt images.vrt')
-
-    images = []
+    img_txt = open('img_path.txt', 'w')
     for paths, subdirs, files in os.walk(imagesPath):
         for name in files:
-            images.append(os.path.join(paths, name))
+            if name.endswith('.tif'):
+                img_txt.write(os.path.join(paths, name) + '\n')
+    img_txt.close()
 
-    ds = gdal.Open(images[0])
+    # Build vrt files
+    os.system('gdalbuildvrt -separate -input_file_list img_path.txt images.vrt')
 
-    a = ds.ReadAsArray()
+    ds = gdal.Open('images.vrt')
+    band1 = ds.GetRasterBand(1)
+    a = band1.ReadAsArray()
+
+    # images = []
+    # for paths, subdirs, files in os.walk(imagesPath):
+    #     for name in files:
+    #         images.append(os.path.join(paths, name))
+
+    # ds = gdal.Open(images[0])
+
+    # a = ds.ReadAsArray()
     nlat, nlon = np.shape(a)
 
     b = ds.GetGeoTransform()  # bbox, interval
