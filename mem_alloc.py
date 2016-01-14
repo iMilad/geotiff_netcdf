@@ -1,3 +1,12 @@
+"""
+Created on Jan 13, 2015
+
+Creating Color Table for matplotlib package
+
+@author: Milad Khakpour,  milad.khakpour@gmail.com
+"""
+
+
 import numpy as np
 import datetime as dt
 import os
@@ -24,6 +33,16 @@ def tiff_to_netcdf(imagesPath, output, chunksize=None):
 
     start = datetime.datetime.now()
     print '\nExecution started at: ', start, '\n'
+
+    # img_txt = open('img_path.txt', 'w')
+    # for paths, subdirs, files in os.walk(imagesPath):
+    #     for name in files:
+    #         if name.endswith('.tif'):
+    #             img_txt.write(os.path.join(paths, name) + '\n')
+    # img_txt.close()
+
+    # Build vrt files
+    # os.system('gdalbuildvrt -input_file_list img_path.txt images.vrt')
 
     images = []
     for paths, subdirs, files in os.walk(imagesPath):
