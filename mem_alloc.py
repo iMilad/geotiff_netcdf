@@ -42,7 +42,7 @@ def tiff_to_netcdf(imagesPath, output, chunksize=None):
     # img_txt.close()
 
     # Build vrt files
-    # os.system('gdalbuildvrt -input_file_list img_path.txt images.vrt')
+    # os.system('gdalbuildvrt -separate -input_file_list img_path.txt images.vrt')
 
     images = []
     for paths, subdirs, files in os.walk(imagesPath):
